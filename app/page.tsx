@@ -1,64 +1,71 @@
 "use client"
-
-import { useState, useEffect, Suspense } from "react"
+import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
 import Header from "@/components/header"
 import Hero from "@/components/hero"
-import InteractiveTimeline from "@/components/interactive-timeline"
-import Materials from "@/components/materials"
-import MaterialComparison from "@/components/material-comparison"
-import MaterialQuiz from "@/components/material-quiz"
-import Impact from "@/components/impact"
 import Footer from "@/components/footer"
-import ParticlesBackground from "@/components/particles-background"
-import Material3DViewer from "@/components/material-3d-viewer"
-import MaterialImpactCalculator from "@/components/material-impact-calculator"
-import InteractiveEvolutionChart from "@/components/interactive-evolution-chart"
-import MaterialPropertiesExplorer from "@/components/material-properties-explorer"
-import EconomicImpactSimulator from "@/components/economic-impact-simulator"
-import FactCards from "@/components/fact-cards"
-import DeepTimeline from "@/components/deep-timeline"
-import AdvancedQuiz from "@/components/advanced-quiz"
-import GameMaterialsInventory from "@/components/game-materials-inventory"
-import CraftingGame from "@/components/crafting-game"
 
-function LoadingFallback() {
-  return <div className="h-screen bg-gradient-to-b from-background to-background/50" />
-}
+// Khối nhẹ (để static import nếu muốn):
+const InteractiveTimeline = dynamic(() => import("@/components/interactive-timeline"), { ssr: false })
+const Materials             = dynamic(() => import("@/components/materials"), { ssr: false })
 
-export default function Home() {
+// Khối nặng/có canvas/3D/animation/chart → luôn ssr:false
+const MaterialComparison          = dynamic(() => import("@/components/material-comparison"), { ssr: false })
+const MaterialQuiz                = dynamic(() => import("@/components/material-quiz"), { ssr: false })
+const Impact                      = dynamic(() => import("@/components/impact"), { ssr: false })
+const ParticlesBackground         = dynamic(() => import("@/components/particles-background"), { ssr: false })
+const Material3DViewer            = dynamic(() => import("@/components/material-3d-viewer"), { ssr: false })
+const MaterialImpactCalculator    = dynamic(() => import("@/components/material-impact-calculator"), { ssr: false })
+const InteractiveEvolutionChart   = dynamic(() => import("@/components/interactive-evolution-chart"), { ssr: false })
+const MaterialPropertiesExplorer  = dynamic(() => import("@/components/material-properties-explorer"), { ssr: false })
+const EconomicImpactSimulator     = dynamic(() => import("@/components/economic-impact-simulator"), { ssr: false })
+const FactCards                   = dynamic(() => import("@/components/fact-cards"), { ssr: false })
+const DeepTimeline                = dynamic(() => import("@/components/deep-timeline"), { ssr: false })
+const AdvancedQuiz                = dynamic(() => import("@/components/advanced-quiz"), { ssr: false })
+const GameMaterialsInventory      = dynamic(() => import("@/components/game-materials-inventory"), { ssr: false })
+const CraftingGame                = dynamic(() => import("@/components/crafting-game"), { ssr: false })
+
+export default function Page() {
   const [scrollY, setScrollY] = useState(0)
-
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    const onScroll = () => setScrollY(window.scrollY || 0)
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
   return (
-    <main className="bg-background text-foreground overflow-hidden">
-      <ParticlesBackground />
-      <div className="relative z-10">
-        <Header />
-        <Suspense fallback={<LoadingFallback />}>
-          <Hero scrollY={scrollY} />
-        </Suspense>
-        <CraftingGame />
-        <GameMaterialsInventory />
-        <Material3DViewer />
-        <MaterialImpactCalculator />
-        <InteractiveEvolutionChart />
-        <MaterialPropertiesExplorer />
-        <EconomicImpactSimulator />
-        <FactCards />
-        <DeepTimeline />
-        <AdvancedQuiz />
-        <InteractiveTimeline />
-        <Materials />
-        <MaterialComparison />
-        <MaterialQuiz />
-        <Impact />
-        <Footer />
-      </div>
-    </main>
+    <main>
+  <ParticlesBackground />
+  <div className="relative z-10">
+    <Header />
+    <Hero scrollY={scrollY} />
+
+    {/* Timeline & Evolution */}
+    <InteractiveTimeline />
+    <DeepTimeline />
+    <InteractiveEvolutionChart />
+
+    {/* Materials Exploration */}
+    <Materials />
+    <MaterialPropertiesExplorer />
+    <Material3DViewer />
+    <MaterialComparison />
+
+    {/* Impact */}
+    <Impact />
+    <MaterialImpactCalculator />
+    <EconomicImpactSimulator />
+
+    {/* Learning & Games */}
+    <MaterialQuiz />
+    <AdvancedQuiz />
+    <GameMaterialsInventory />
+    <CraftingGame />
+
+    {/* Fun Facts & Footer */}
+    <FactCards />
+    <Footer />
+  </div>
+</main>
   )
 }
