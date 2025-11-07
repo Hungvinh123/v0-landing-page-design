@@ -57,7 +57,6 @@ export default function Page() {
     <EconomicImpactSimulator />
 
     {/* Learning & Games */}
-    <MaterialQuiz />
     <AdvancedQuiz />
     <GameMaterialsInventory />
     <CraftingGame />
